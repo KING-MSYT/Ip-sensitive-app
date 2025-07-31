@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Free Fire Sensitivity Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0e0e0e;
+      color: #fff;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #00ffd5;
+    }
+
+    #ip, #device {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+
+    .sensitivity-group {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px #00ffd5;
+    }
+
+    .sensitivity-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 1em;
+    }
+
+    .bar-container {
+      background: #333;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 60%;
+      margin-left: 10px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff99, #00ccff);
+      width: 0%;
+      transition: width 2s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔥 Free Fire Sensitivity Analyzer</h1>
+  <div id="ip">IP: Loading...</div>
+  <div id="device">Detecting device...</div>
+
+  <div class="sensitivity-group" id="sensitivity-panel">
+    <h2>Sensitivity Settings</h2>
+
+    <div class="sensitivity-item">
+      <span>General</span>
+      <div class="bar-container"><div class="bar-fill" id="bar-general"></div></div>
+    </div>
+    <div class="sensitivity-item">
+      <span>Red Dot</span>
+      <div class="bar-container"><div class="bar-fill" id="bar-reddot"></div></div>
+    </div>
+    <div class="sensitivity-item">
+      <span>2x Scope</span>
+      <div class="bar-container"><div class="bar-fill" id="bar-2x"></div></div>
+    </div>
+    <div class="sensitivity-item">
+      <span>4x Scope</span>
+      <div class="bar-container"><div class="bar-fill" id="bar-4x"></div></div>
+    </div>
+    <div class="sensitivity-item">
+      <span>Sniper Scope</span>
+      <div class="bar-container"><div class="bar-fill" id="bar-sniper"></div></div>
+    </div>
+    <div class="sensitivity-item">
+      <span>Free Look</span>
+      <div class="bar-container"><div class="bar-fill" id="bar-look"></div></div>
+    </div>
+  </div>
+
+  <script>
+    // 1. IP Address
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("ip").textContent = "IP: " + data.ip;
+      });
+
+    // 2. Detect device & show FF sensitivity
+    function detectDeviceAndSetSensitivity() {
+      const ua = navigator.userAgent;
+      let brand = "Unknown";
+      let model = "Unknown";
+
+      // Extract device info
+      if (/Android/.test(ua)) {
+        const match = ua.match(/\((.*?)\)/);
+        if (match && match[1]) {
+          const parts = match[1].split(';');
+          brand = parts[2] ? parts[2].trim() : "Android";
+          model = parts[3] ? parts[3].trim() : "Unknown Model";
+        }
+      } else if (/iPhone/.test(ua)) {
+        brand = "Apple";
+        model = "iPhone";
+      }
+
+      document.getElementById("device").textContent = `Device: ${brand} ${model}`;
+
+      // 3. Sensitivity presets by brand
+      let preset = {
+        general: 100,
+        reddot: 100,
+        x2: 100,
+        x4: 100,
+        sniper: 100,
+        freelook: 100
+      };
+
+      const b = brand.toLowerCase();
+      if (b.includes("samsung")) {
+        preset = {
+          general: 95,
+          reddot: 90,
+          x2: 85,
+          x4: 75,
+          sniper: 70,
+          freelook: 80
+        };
+      } else if (b.includes("xiaomi") || b.includes("redmi") || b.includes("poco")) {
+        preset = {
+          general: 100,
+          reddot: 97,
+          x2: 93,
+          x4: 85,
+          sniper: 80,
+          freelook: 90
+        };
+      } else if (b.includes("realme") || b.includes("vivo")) {
+        preset = {
+          general: 92,
+          reddot: 89,
+          x2: 84,
+          x4: 78,
+          sniper: 74,
+          freelook: 85
+        };
+      } else if (b.includes("apple")) {
+        preset = {
+          general: 85,
+          reddot: 80,
+          x2: 75,
+          x4: 70,
+          sniper: 65,
+          freelook: 70
+        };
+      }
+
+      // 4. Animate bars
+      const bars = {
+        general: "bar-general",
+        reddot: "bar-reddot",
+        x2: "bar-2x",
+        x4: "bar-4x",
+        sniper: "bar-sniper",
+        freelook: "bar-look"
+      };
+
+      for (const key in bars) {
+        const bar = document.getElementById(bars[key]);
+        bar.style.width = preset[key] + "%";
+      }
+    }
+
+    detectDeviceAndSetSensitivity();
+  </script>
+</body>
+        </html>
