@@ -93,100 +93,90 @@
     </div>
   </div>
 
-  <script>
-    // Get IP
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("ip").textContent = "IP: " + data.ip;
-      });
+<script>
+  function detectDeviceAndSetSensitivity() {
+    const ua = navigator.userAgent;
+    console.log("UserAgent =>", ua); // 🔍 Debug print
 
-    // Detect brand from model prefix
-    function detectDeviceAndSetSensitivity() {
-      const ua = navigator.userAgent;
-      let brand = "Unknown";
-      let model = "Unknown";
+    let brand = "Unknown";
+    let model = "Unknown";
 
-      // Extract model info from UA
-      if (/Android/.test(ua)) {
-        const match = ua.match(/\((.*?)\)/);
-        if (match && match[1]) {
-          const parts = match[1].split(';');
+    if (/Android/.test(ua)) {
+      const match = ua.match(/\((.*?)\)/);
+      if (match && match[1]) {
+        const parts = match[1].split(';');
+        console.log("UA parts:", parts); // 🔍 Debug
+
+        // Try common locations
+        for (let part of parts) {
+          part = part.trim();
+          if (/SM-|RMX|CPH|M200|Redmi|MI|V\d{4}|Poco/i.test(part)) {
+            model = part;
+            break;
+          }
+        }
+
+        if (model === "Unknown" && parts.length >= 4) {
           model = parts[parts.length - 1].trim();
         }
-      } else if (/iPhone/.test(ua)) {
-        brand = "Apple";
-        model = "iPhone";
       }
+    } else if (/iPhone/.test(ua)) {
+      brand = "Apple";
+      model = "iPhone";
+    }
 
-      // Map model prefixes to known brands
-      const modelMap = {
-        "SM-": "Samsung",
-        "RMX": "Realme",
-        "CPH": "Oppo",
-        "M200": "Xiaomi",
-        "MI": "Xiaomi",
-        "Redmi": "Xiaomi",
-        "V": "Vivo",
-        "Poco": "Poco",
-        "iPhone": "Apple"
-      };
+    // Map model prefix to brand
+    const modelMap = {
+      "SM-": "Samsung",
+      "RMX": "Realme",
+      "CPH": "Oppo",
+      "M200": "Xiaomi",
+      "MI": "Xiaomi",
+      "Redmi": "Xiaomi",
+      "V": "Vivo",
+      "Poco": "Poco",
+      "iPhone": "Apple"
+    };
 
-      for (const prefix in modelMap) {
-        if (model.startsWith(prefix)) {
-          brand = modelMap[prefix];
-          break;
-        }
-      }
-
-      document.getElementById("device").textContent = `Device: ${brand} ${model}`;
-
-      // Sensitivity presets
-      let preset = {
-        general: 100,
-        reddot: 100,
-        x2: 100,
-        x4: 100,
-        sniper: 100,
-        freelook: 100
-      };
-
-      const b = brand.toLowerCase();
-      if (b.includes("samsung")) {
-        preset = {
-          general: 95, reddot: 90, x2: 85, x4: 75, sniper: 70, freelook: 80
-        };
-      } else if (b.includes("xiaomi") || b.includes("redmi") || b.includes("poco")) {
-        preset = {
-          general: 100, reddot: 97, x2: 93, x4: 85, sniper: 80, freelook: 90
-        };
-      } else if (b.includes("realme") || b.includes("vivo")) {
-        preset = {
-          general: 92, reddot: 89, x2: 84, x4: 78, sniper: 74, freelook: 85
-        };
-      } else if (b.includes("apple")) {
-        preset = {
-          general: 85, reddot: 80, x2: 75, x4: 70, sniper: 65, freelook: 70
-        };
-      }
-
-      // Animate bars
-      const bars = {
-        general: "bar-general",
-        reddot: "bar-reddot",
-        x2: "bar-2x",
-        x4: "bar-4x",
-        sniper: "bar-sniper",
-        freelook: "bar-look"
-      };
-
-      for (const key in bars) {
-        const bar = document.getElementById(bars[key]);
-        bar.style.width = preset[key] + "%";
+    for (const prefix in modelMap) {
+      if (model.startsWith(prefix)) {
+        brand = modelMap[prefix];
+        break;
       }
     }
 
-    detectDeviceAndSetSensitivity();
-  </script>
+    document.getElementById("device").textContent = `Device: ${brand} ${model}`;
+    console.log(`Detected => ${brand} ${model}`); // 🔍 Debug
+
+    // --- Sensitivity setup same as before ---
+    const presetMap = {
+      samsung: { general: 95, reddot: 90, x2: 85, x4: 75, sniper: 70, freelook: 80 },
+      xiaomi:  { general: 100, reddot: 97, x2: 93, x4: 85, sniper: 80, freelook: 90 },
+      realme:  { general: 92, reddot: 89, x2: 84, x4: 78, sniper: 74, freelook: 85 },
+      vivo:    { general: 92, reddot: 89, x2: 84, x4: 78, sniper: 74, freelook: 85 },
+      apple:   { general: 85, reddot: 80, x2: 75, x4: 70, sniper: 65, freelook: 70 },
+      default: { general: 100, reddot: 100, x2: 100, x4: 100, sniper: 100, freelook: 100 }
+    };
+
+    const lowerBrand = brand.toLowerCase();
+    const preset = presetMap[lowerBrand] || presetMap.default;
+
+    const bars = {
+      general: "bar-general",
+      reddot: "bar-reddot",
+      x2: "bar-2x",
+      x4: "bar-4x",
+      sniper: "bar-sniper",
+      freelook: "bar-look"
+    };
+
+    for (const key in bars) {
+      const bar = document.getElementById(bars[key]);
+      bar.style.width = preset[key] + "%";
+    }
+  }
+
+  detectDeviceAndSetSensitivity();
+</script>
 </body>
 </html>
