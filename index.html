@@ -94,35 +94,54 @@
   </div>
 
   <script>
-    // 1. IP Address
+    // Get IP
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
       .then(data => {
         document.getElementById("ip").textContent = "IP: " + data.ip;
       });
 
-    // 2. Detect device & show FF sensitivity
+    // Detect brand from model prefix
     function detectDeviceAndSetSensitivity() {
       const ua = navigator.userAgent;
       let brand = "Unknown";
       let model = "Unknown";
 
-      // Extract device info
+      // Extract model info from UA
       if (/Android/.test(ua)) {
         const match = ua.match(/\((.*?)\)/);
         if (match && match[1]) {
           const parts = match[1].split(';');
-          brand = parts[2] ? parts[2].trim() : "Android";
-          model = parts[3] ? parts[3].trim() : "Unknown Model";
+          model = parts[parts.length - 1].trim();
         }
       } else if (/iPhone/.test(ua)) {
         brand = "Apple";
         model = "iPhone";
       }
 
+      // Map model prefixes to known brands
+      const modelMap = {
+        "SM-": "Samsung",
+        "RMX": "Realme",
+        "CPH": "Oppo",
+        "M200": "Xiaomi",
+        "MI": "Xiaomi",
+        "Redmi": "Xiaomi",
+        "V": "Vivo",
+        "Poco": "Poco",
+        "iPhone": "Apple"
+      };
+
+      for (const prefix in modelMap) {
+        if (model.startsWith(prefix)) {
+          brand = modelMap[prefix];
+          break;
+        }
+      }
+
       document.getElementById("device").textContent = `Device: ${brand} ${model}`;
 
-      // 3. Sensitivity presets by brand
+      // Sensitivity presets
       let preset = {
         general: 100,
         reddot: 100,
@@ -135,43 +154,23 @@
       const b = brand.toLowerCase();
       if (b.includes("samsung")) {
         preset = {
-          general: 95,
-          reddot: 90,
-          x2: 85,
-          x4: 75,
-          sniper: 70,
-          freelook: 80
+          general: 95, reddot: 90, x2: 85, x4: 75, sniper: 70, freelook: 80
         };
       } else if (b.includes("xiaomi") || b.includes("redmi") || b.includes("poco")) {
         preset = {
-          general: 100,
-          reddot: 97,
-          x2: 93,
-          x4: 85,
-          sniper: 80,
-          freelook: 90
+          general: 100, reddot: 97, x2: 93, x4: 85, sniper: 80, freelook: 90
         };
       } else if (b.includes("realme") || b.includes("vivo")) {
         preset = {
-          general: 92,
-          reddot: 89,
-          x2: 84,
-          x4: 78,
-          sniper: 74,
-          freelook: 85
+          general: 92, reddot: 89, x2: 84, x4: 78, sniper: 74, freelook: 85
         };
       } else if (b.includes("apple")) {
         preset = {
-          general: 85,
-          reddot: 80,
-          x2: 75,
-          x4: 70,
-          sniper: 65,
-          freelook: 70
+          general: 85, reddot: 80, x2: 75, x4: 70, sniper: 65, freelook: 70
         };
       }
 
-      // 4. Animate bars
+      // Animate bars
       const bars = {
         general: "bar-general",
         reddot: "bar-reddot",
@@ -190,4 +189,4 @@
     detectDeviceAndSetSensitivity();
   </script>
 </body>
-        </html>
+</html>
