@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>⚡🄰🄻🄻 🄱🄾🅃 🄳🄰🅃🄰 ⚡</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    @keyframes borderPulse {
+      0% {
+        box-shadow: 0 0 5px #00fff7, 0 0 10px #00fff7;
+      }
+      50% {
+        box-shadow: 0 0 15px #00fff7, 0 0 25px #00fff7;
+      }
+      100% {
+        box-shadow: 0 0 5px #00fff7, 0 0 10px #00fff7;
+      }
+    }
+
+
+    .btn-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px 20px;
+    }
+
+    .asitha-btn {
+      padding: 14px 30px;
+      background-color: black;
+      border: non;
+      color: white;
+      border-radius: 50px;
+      font-size: 17px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease-in-out;
+      box-shadow: 0 0 15px #ff0066, 0 0 30px #ff0066;
+      animation: glowPulse 2s infinite;
+    }
+
+    .asitha-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px #ff3399, 0 0 50px #ff3399;
+    }
+
+    @keyframes glowPulse {
+      0% {
+        box-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066;
+      }
+      50% {
+        box-shadow: 0 0 25px #ff0066, 0 0 45px #ff0066;
+      }
+      100% {
+        box-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .search-box {
+        flex-direction: column;
+      }
+
+      .asitha-btn {
+        width: 100%;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+
+  <div class="btn-container">
+    <button class="asitha-btn">KING-MS</button>
+    <button class="asitha-btn">ASITHA-MD</button>
+    <button class="asitha-btn">VAJIRA-X-MD</button>
+    <button class="asitha-btn">PRABATH-MD</button>
+    <button class="asitha-btn">MANU-MD</button>
+    <button class="asitha-btn">LAKA-MD</button>
+    <button class="asitha-btn">VISPER-MD</button>
+    <button class="asitha-btn">SENU-XMD</button>
+  </div>
+
+</body>
+</html>
